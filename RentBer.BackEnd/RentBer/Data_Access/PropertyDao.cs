@@ -35,7 +35,7 @@ namespace RentBer.Data_Access
                 StreetAddress = editableProperty.StreetAddress,
                 City = editableProperty.City,
                 State = editableProperty.State,
-                Zip = editableProperty.Zip ?? 99999
+                Zip = editableProperty.Zip
             };
 
             propertyCol.Insert(newProperty);
@@ -73,9 +73,9 @@ namespace RentBer.Data_Access
                 foundProperty.State = editableProperty.State;
             }
 
-            if (editableProperty.Zip.HasValue)
+            if (!string.IsNullOrEmpty(editableProperty.Zip))
             {
-                foundProperty.Zip = editableProperty.Zip.Value;
+                foundProperty.Zip = editableProperty.Zip;
             }
 
             propertyCol.Update(foundProperty);

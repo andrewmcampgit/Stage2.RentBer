@@ -17,7 +17,8 @@ namespace RentBer.Controllers
             var rentalPaymentDao = new RentalPaymentDao();
             if (rentalAgreementId.HasValue || ownerId.HasValue || dueAfterDate.HasValue)
             {
-                return Ok(rentalPaymentDao.GetFilteredRentalPayments(rentalAgreementId, ownerId, dueAfterDate));
+                return Ok(rentalPaymentDao.GetFilteredRentalPayments(rentalAgreementId, ownerId, dueAfterDate)
+                .OrderByDescending(rp => rp.DueDate));
             }
             else
             {

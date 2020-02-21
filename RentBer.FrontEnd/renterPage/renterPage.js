@@ -24,6 +24,25 @@ function renderRenterPage(renter) {
             $.ajax(`${baseHostApi}/owners/${rentalAgreement.OwnerId}`)
                 .done(function (owner) {
                     renderRentalAgreementDetails(rentalAgreement, owner);
+                    //added this below
+                    $.ajax(`${baseHostApi}/rentalpayments?rentalAgreementId=${rentalAgreement.Id}`)
+                        .done(function(rentalPayments){
+                            var dueRentalPayments = []
+                            var paidRentalPayments = []
+                            for (let rentalPayment of rentalPayments){
+                                if (rentalPayment.IsPaid == false){
+                                    dueRentalPayments.push(rentalPayment);
+                                }
+                                else
+                                {
+                                    paidRentalPayments.push(rentalPayment);
+
+                                }
+                            }
+                            renderDueRentalPayment(dueRentalPayments, rentalAgreement, owner);
+                            renderPaidRentalPayment(paidRentalPayments, rentalAgreement, owner);
+
+                        })
                 })
         });
 }
@@ -46,4 +65,37 @@ function renderRentalAgreementDetails(rentalAgreement, owner) {
     rentalAgreementLineTwo.text("Monthly Rate: $" + rentalAgreement.MonthlyRate);
 
     $("#rental-agreement-div").append(rentalAgreementLineOne, rentalAgreementLineTwo);
+}
+
+// added this function
+function renderDueRentalPayment(rentalPayments, rentalAgreement, owner){
+    
+    var rentalPaymentsDiv = $("#due-rental-payments-div");
+    console.log(rentalPaymentsDiv);
+    for (let rentalPayment of rentalPayments){
+        //console.log(rentalPayments);
+        var rentalPaymentElem = $("<div>");
+        rentalPaymentElem.text(`$${rentalAgreement.MonthlyRate} due on ` +
+        `${new Date(rentalPayment.DueDate).toLocaleDateString()} for ${owner.FirstName} ${owner.LastName}`)
+        rentalPaymentsDiv.append(rentalPaymentElem);
+
+
+    }
+
+}
+
+//added this function
+function renderPaidRentalPayment(rentalPayments, rentalAgreement, owner){
+    
+    var rentalPaymentsDiv = $("#paid-rental-payments-div");
+    console.log(rentalPaymentsDiv);
+    for (let rentalPayment of rentalPayments){
+        //console.log(rentalPayments);
+        var rentalPaymentElem = $("<div>");
+        rentalPaymentElem.text(`$${rentalAgreement.MonthlyRate} paid on ` +
+        `${new Date(rentalPayment.PaidDate).toLocaleDateString()} by ${owner.FirstName} ${owner.LastName}`)
+        rentalPaymentsDiv.append(rentalPaymentElem);
+
+
+    }
 }

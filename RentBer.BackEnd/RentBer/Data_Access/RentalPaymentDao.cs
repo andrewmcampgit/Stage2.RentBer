@@ -65,6 +65,7 @@ namespace RentBer.Data_Access
                 Id = Guid.NewGuid(),
                 RentalAgreementId = editableRentalPayment.RentalAgreementId.Value,
                 DueDate = editableRentalPayment.DueDate ?? DateTime.MinValue,
+                PaidDate = editableRentalPayment.PaidDate ?? null,
                 IsPaid = editableRentalPayment.IsPaid ?? false
             };
 
@@ -94,6 +95,10 @@ namespace RentBer.Data_Access
             if (editableRentalPayment.IsPaid.HasValue)
             {
                 foundRentalPayment.IsPaid = editableRentalPayment.IsPaid.Value;
+            }
+            if (editableRentalPayment.PaidDate.HasValue)
+            {
+                foundRentalPayment.PaidDate = editableRentalPayment.PaidDate.Value;
             }
 
             rentalPaymentCol.Update(foundRentalPayment);
